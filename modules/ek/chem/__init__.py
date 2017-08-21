@@ -1,1 +1,3 @@
-from . import constants, model3d
+from . import atom
+from .atom import Atom
+from .atom import Molecule
