@@ -51,8 +51,9 @@ class Molecule:
 		f.readline()					# skip comment
 
 		for i in range(numatoms):
-			tokens = f.readline().split()
-			print(tokens)
+			t = f.readline().split()
+			atom = Atom(t[0], t[1], t[2], t[3])
+			self.atoms.append(atom)
 		
 		f.close()
 		
