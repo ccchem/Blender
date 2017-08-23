@@ -6,6 +6,5 @@ class Vec3:
         self.z = float(z)
 
 
-    def __str__(self):
+    def __repr__(self):
         return "(" + str(self.x) + ", " + str(self.y) + ", " + str(self.z) + ")"
-
