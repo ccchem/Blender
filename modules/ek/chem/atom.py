@@ -12,10 +12,10 @@ COV_RAD = {
 
 # Van der Waals radii
 VDW_RAD = {
-    'H': 1.2,
-    'Li': 2.2, 'B': 1.8,  'C': 1.7,   'N': 1.6,  'O': 1.55, 'F': 1.5,
-    'Na': 2.4, 'Mg': 2.2, 'Al': 2.1,  'Si': 2.1, 'P': 1.95, 'S': 1.8, 'Cl': 1.8,
-    'K': 2.8,  'Ca': 2.4, 'Fe': 2.05, 'Cu': 2.0
+	'H': 1.2,
+	'Li': 2.2, 'B': 1.8,  'C': 1.7,   'N': 1.6,  'O': 1.55, 'F': 1.5,
+	'Na': 2.4, 'Mg': 2.2, 'Al': 2.1,  'Si': 2.1, 'P': 1.95, 'S': 1.8, 'Cl': 1.8,
+	'K': 2.8,  'Ca': 2.4, 'Fe': 2.05, 'Cu': 2.0
 }
 
 
@@ -28,7 +28,7 @@ class Atom(Vec3):
 		Vec3.__init__(self, x, y, z)
 		self.symbol = symbol
 
-	def __str__(self):
+	def __repr__(self):
 		return "(" + self.symbol + ", " + str(self.x) + ", " + str(self.y) + ", " + str(self.z) + ")"
 
 
@@ -39,16 +39,19 @@ class Molecule:
 	
 	def __init__(self):
 		self.atoms = []
-		self.bond = []
+		self.bonds = []
 		
 	def add_atom(self, atom):
 		self.atoms.append(atom)
 
-	def read_xyz(self, filename):		
-		f = open(filename)		
+	def read_xyz(self, filename, createBonds = False):
+		del self.atoms[:]
+		del self.bonds[:]
 		
-		numatoms = int(f.readline())	# number of atoms
-		f.readline()					# skip comment
+		f = open(filename)      
+		
+		numatoms = int(f.readline())    # number of atoms
+		f.readline()                    # skip comment
 
 		for i in range(numatoms):
 			t = f.readline().split()
@@ -57,6 +60,20 @@ class Molecule:
 		
 		f.close()
 		
+		if createBonds:
+			i = 0
+			while i < numatoms-1:
+				j = i + 1
+				while j < numatoms:
+					#print(str(i) + ", " + str(j))
+					a1 = self.atoms[i]
+					a2 = self.atoms[j]
+					dist = Vec3.distance(a1, a2)
+					if dist < COV_RAD[a1.symbol] + COV_RAD[a2.symbol]:
+						self.bonds.append((i, j))
+					j += 1
+				i += 1
+
 
 # ---------------------------------------------------------------------
 
